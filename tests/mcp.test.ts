@@ -68,4 +68,22 @@ describe("MCP Tool Tests", () => {
 
         assert.ok(info, "encryption://info resource should be listed!");
     });
+
+    it("shoud return the encrypted_message_prompt", async () => {
+        const result = await client.getPrompt({
+            name: "encrypt_message_prompt",
+            arguments: {
+                message: "Secret textation",
+                encryptionKey,
+            },
+        });
+
+        const item = result.messages.at(0)?.content as unknown as { text: string };
+        const expected = `Please encrypt the following message using the encrypt_message tool. \nMessage: Secret textation\nEncryption Key: my-passphrase`
+        assert.deepStrictEqual(
+            item.text,
+            expected,
+            "Prompt should reference the encrypt_message_prompt tool!"
+        );
+    });
 });
